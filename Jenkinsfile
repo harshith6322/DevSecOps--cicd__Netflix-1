@@ -27,12 +27,19 @@ pipeline{
 
       stage("Sonarqube Analysis"){
         steps{
-            sh '''sonarqube_scanner \
+
+
+            withSonarQubeEnv(credentialsId: 'sonar_qube_server') {
+
+                  sh '''sonarqube_scanner \
             -Dsonar.projectKey=jenkins-netflix-code \
             -Dsonar.sources=. \
             -Dsonar.host.url=http://18.234.112.226:9000 \
             -Dsonar.login=sqp_71d6e076c5333d82405859bac907bf2c81830007'''
         }
+    // some block
+}
+          
 
       }
 
