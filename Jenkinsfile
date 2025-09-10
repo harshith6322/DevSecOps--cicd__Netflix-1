@@ -27,7 +27,7 @@ pipeline{
 
       stage("Sonarqube Analysis"){
         steps{
-            sh '''sonar-scanner \
+            sh '''sonarqube_scanner \
             -Dsonar.projectKey=jenkins-netflix-code \
             -Dsonar.sources=. \
             -Dsonar.host.url=http://18.234.112.226:9000 \
