@@ -13,7 +13,7 @@ pipeline{
 
 
     environment{
-      SCANNER_HOME=tool 'sonar_scanner'
+      SCANNER_HOME=tool 'sonarqube_scanner'
     }
 
 
