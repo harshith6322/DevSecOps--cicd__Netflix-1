@@ -1,0 +1,141 @@
+---
+
+- name: Install Jenkins && Docker
+  hosts: jenkins-slave
+  connection: ssh
+  become: true
+
+  vars:
+    gist_github_ubuntu: 'https://gist.githubusercontent.com/harshith6322/148d9b5a49dfe5bb7807b6227e247bb3/raw/4069daedacc0d359f4e2bf776c54eb229267ef98/Jenkins&&Docker_on_Ubuntu.bh'
+
+    gist_github_amazon: 'https://gist.githubusercontent.com/harshith6322/a7ec52b2c184a9b4c8a5c45778e25aa1/raw/f1bac93c6d56bca9db2fa5a3fd3a027c9dd551ed/Jenkins&&Docker_on_Amazon_Linux.bh'
+
+    docker_compose_url: 'https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)'
+
+  tasks:
+  ##### install jenkins docker on Amazon
+  - name: Update && Upgrade on Amazon
+    ansible.builtin.yum:
+      state: present
+      update_cache: true
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: Get shell script on AMAZON
+    ansible.builtin.get_url:
+      url: '{{ gist_github_amazon }}'
+      dest: "/root/Jenkins_Docker_on_AmazonLinux.sh"
+      mode: "0755"
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: Run shell
+    ansible.builtin.command: /bin/bash /root/Jenkins_Docker_on_AmazonLinux.sh
+    args:
+      creates: /var/lib/jenkins
+    register: output_a
+    ignore_errors: true
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: Wait for server to come back after reboot
+    ansible.builtin.wait_for_connection:
+      connect_timeout: 5
+      sleep: 10
+      delay: 30
+      timeout: 600
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: Output
+    ansible.builtin.debug:
+      var: output_a.stdout
+    when: ansible_facts['os_family'] == "RedHat"
+
+  ##### install jenkins docker on Ubuntu
+
+  - name: Update && Upgrade Ubuntu
+    ansible.builtin.apt:
+      state: latest
+      update_cache: true
+    when: ansible_facts['os_family'] == "Debian"
+    tags: jenkins-master
+
+  - name: Get shell script on Ubuntu
+    ansible.builtin.get_url:
+      url: '{{ gist_github_ubuntu }}'
+      dest: '/root/Jenkins_Docker_on_UbuntuLinux.sh'
+      mode: "0755"
+    when: ansible_facts['os_family'] == "Debian"
+    tags: jenkins-master
+
+  - name: Run shell
+    ansible.builtin.command: /bin/bash /root/Jenkins_Docker_on_UbuntuLinux.sh
+    args:
+      creates: /var/lib/jenkins
+    register: output_u
+    ignore_errors: true
+    when: ansible_facts['os_family'] == "Debian"
+    tags: jenkins-master
+
+  - name: Wait for server to come back after reboot
+    ansible.builtin.wait_for_connection:
+      connect_timeout: 5
+      sleep: 10
+      delay: 30
+      timeout: 600
+    when: ansible_facts['os_family'] == "Debian"
+    tags: jenkins-master
+
+  - name: Debug Ubuntu script output
+    ansible.builtin.debug:
+      var: output_u.stdout
+    when: ansible_facts['os_family'] == "Debian"
+
+
+###---slave-----    
+
+  - name: java installtion
+    ansible.builtin.command: "{{ 'sudo apt install -y fontconfig openjdk-21-jre' if ansible_facts['os_family'] == 'Debian' else 'sudo yum install java-21-amazon-corretto.x86_64 -y' }}"
+    tags: slave
+
+  - name: docker installtion
+    ansible.builtin.command: "{{ 'sudo apt install docker.io -y' if ansible_facts['os_family'] == 'Debian' else 'sudo yum install docker -y' }}"
+    tags: slave
+    # tags: jenkins-master
+
+  - name: nodejs installtion
+    ansible.builtin.command: "{{'sudo apt install nodejs -y' if ansible_facts['os_family'] == 'Debian' else 'sudo yum install -y nodejs' }}"
+    # tags: slave
+
+  - name: docker compose on ubuntu
+    ansible.builtin.command: sudo apt  install docker-compose -y
+    when: ansible_facts['os_family'] == 'Debian'
+    tags: slave
+
+  - name: Install Docker Compose on RedHat
+    ansible.builtin.shell: |
+      curl -L {{ docker_compose_url }} -o /usr/local/bin/docker-compose
+      chmod +x /usr/local/bin/docker-compose
+    # tags: slave
+    when: ansible_facts['os_family'] == "RedHat"
+
+  - name: Install trivy on Amazon
+    ansible.builtin.shell: |
+      curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin  v0.65.0
+    when: ansible_facts['os_family'] == 'RedHat'
+    tags: slave
+    # tags: jenkins-master
+
+  - name: Install trivy on Ubuntu
+    ansible.builtin.shell: |
+      sudo apt-get install wget gnupg
+      wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+      echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+      sudo apt-get update
+      sudo apt-get install trivy
+    when: ansible_facts['os_family'] == "Debian"
+    tags: slave
+    # tags: jenkins-master
+
+  - name: Running sonarqube on ubuntu as container
+    ansible.builtin.shell: |
+      docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+    when: ansible_facts['os_family'] == "Debian"
+    tags: jenkins-master

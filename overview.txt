@@ -1,0 +1,21 @@
+###__Devops_CI/CD_JENKINS_PROJECT__##
+
+1.created an 2 instnaces in aws t3.micro ubuntu server
+    * 1 instace for jenkins-master and another for jenkins-slave
+    *executed an shell scritp for ansible-setup as slave nodes
+
+2.enabling ansible-master in laptop wsl ubuntu distro
+    * added ip to inventory as ansible-slave and jenkins-master jenkins-slave
+    * checking ssh connection using adhoc
+       -->ansible -m ping ansible-slaves
+    * executed an ansible-playbook to install jenkins,docker,sonarqube as container on jenkins master
+       --> ansible-playbook ansible-playbook-JM.yml --tags jenkins-master
+    * on slave we install trivy,docker,java
+       -->ansible-playbook ansible-playbook-JM.yml --tags slave
+
+3.jenkins-master config
+   *added port 8080 and 9000 to sg in aws
+   *inital setup of jenkins master like in-build node executer to 0 
+   *created jenkins user with limited access acrross system and connected to master slave via ssh
+   *setup node agent as slave-1
+   *plugins->
