@@ -1,14 +1,16 @@
 pipeline{
+
+
+    agent{
+        label "slave-1"
+    }
   
    tools{
       jdk 'jdk_tool'
       nodejs 'nodejs_tool'
     }
+    
 
-    tools{
-      jdk 'jdk_tool'
-      nodejs 'nodejs_tool'
-    }
 
     environment{
       SCANNER_HOME=tool 'sonar_scanner'
