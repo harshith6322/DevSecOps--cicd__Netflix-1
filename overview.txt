@@ -18,4 +18,7 @@
    *inital setup of jenkins master like in-build node executer to 0 
    *created jenkins user with limited access acrross system and connected to master slave via ssh
    *setup node agent as slave-1
-   *plugins->
+   *plugins->Pipeline: Stage View,ThinBackupVersion,NodeJSVersion,Eclipse Temurin installer, sonarqube_scanner,
+
+4. pipeline creation:
+  
