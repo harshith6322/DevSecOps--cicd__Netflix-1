@@ -23,7 +23,7 @@ pipeline {
             steps {
                
                     sh """
-                        ${SCANNER_HOME}/bin/sonar-scanner_tool \
+                        ${SCANNER_HOME}/bin/sonar-scanner \
                          -Dsonar.projectKey=netflix_code \
                          -Dsonar.sources=. \
                          -Dsonar.host.url=http://54.204.255.166:9000 \
