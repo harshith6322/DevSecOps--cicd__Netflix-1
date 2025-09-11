@@ -22,14 +22,12 @@ pipeline {
         stage("SonarQube Analysis") {
             steps {
                
-                    sh """
-                        ${SCANNER_HOME}/bin/sonar-scanner \
+                    sh """${SCANNER_HOME}/bin/sonar-scanner \
                          -Dsonar.projectKey=netflix_code \
                          -Dsonar.sources=src \
                          -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/.git/**,**/coverage/**,**/*.min.js
                          -Dsonar.host.url=http://54.204.255.166:9000 \
-                         -Dsonar.login=sqp_d1cf341d438b4e4dbf70f0a6547cf9258eedea6b
-                         """
+                         -Dsonar.login=sqp_d1cf341d438b4e4dbf70f0a6547cf9258eedea6b"""
               
             }
         }
