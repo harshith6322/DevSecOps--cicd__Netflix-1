@@ -4,7 +4,7 @@ pipeline {
     }
 
     tools {
-        jdk 'jdk_tool'
+        jdk 'jdk_tooll'
         nodejs 'nodejs_tool'
     }
 
@@ -37,7 +37,7 @@ ${SCANNER_HOME}/bin/sonar-scanner \
         stage("Quality Gate") {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
+                    waitForQualityGate abortPipeline: true, credentialsId: 'sonar_secert'
                 }
             }
         }
