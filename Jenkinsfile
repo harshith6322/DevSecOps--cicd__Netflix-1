@@ -10,6 +10,7 @@ pipeline {
 
     environment {
         SCANNER_HOME = tool('sonarqube_scanner_tool')
+        build_ide = "$BUILD_ID"
     }
 
     stages {
@@ -34,14 +35,14 @@ pipeline {
             }
         }
 
-        stage("Quality Gate") {
-            steps {
-                script {
+        // stage("Quality Gate") {
+        //     steps {
+        //         script {
                     
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar_secert'
-                }
-            }
-        }
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'sonar_secert'
+        //         }
+        //     }
+        // }
 
         stage("Install Dependencies") {
             steps {
@@ -53,6 +54,28 @@ pipeline {
             steps {
                 dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+
+        stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }
+        stage("Docker Build & Push"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker_token'){   
+                       sh "docker build --build-arg TMDB_V3_API_KEY=34b7fa0e189425be905b6072d83b9604 -t netflix_repo:${build_ide} ."
+                       sh "docker push harshithreddy6322/netflix_repo:${build_ide}"
+                    }
+                }
+            }
+        }
+
+        stage("TRIVY"){
+            steps{
+                sh "trivy image harshithreddy6322/netflix:${build_ide} > trivyimage.txt" 
             }
         }
     }
