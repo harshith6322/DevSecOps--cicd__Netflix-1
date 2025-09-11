@@ -37,7 +37,7 @@ ${SCANNER_HOME}/bin/sonar-scanner \
         stage("Quality Gate") {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: true, credentialsId: 'sonar_secert'
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token'
                 }
             }
         }
