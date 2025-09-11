@@ -16,9 +16,10 @@
 3.jenkins-master config
    *added port 8080 and 9000 to sg in aws
    *inital setup of jenkins master like in-build node executer to 0 
-   *created jenkins user with limited access acrross system and connected to master slave via ssh
+   *created jenkins user with limited access acrross system and connected master to slave via ssh
    *setup node agent as slave-1
    *plugins->Pipeline: Stage View,ThinBackupVersion,NodeJSVersion,Eclipse Temurin installer, sonarqube_scanner,
 
 4. pipeline creation:
+   *
   

@@ -9,7 +9,7 @@ pipeline {
     }
 
     environment {
-        SCANNER_HOME = tool('sonarqube_scanner')
+        SCANNER_HOME = tool('sonarqube_scanner_tool')
     }
 
     stages {
@@ -23,12 +23,12 @@ pipeline {
             steps {
                
                     sh """
-                        ${SCANNER_HOME}/bin/sonar-scanner \
-                        -Dsonar.projectKey=jenkins-netflix-code \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://18.234.112.226:9000 \
-                        -Dsonar.login=sqp_71d6e076c5333d82405859bac907bf2c81830007
-                    """
+                        ${SCANNER_HOME}/bin/sonar-scanner_tool \
+                         -Dsonar.projectKey=netflix_code \
+                         -Dsonar.sources=. \
+                         -Dsonar.host.url=http://54.204.255.166:9000 \
+                         -Dsonar.login=sqp_d1cf341d438b4e4dbf70f0a6547cf9258eedea6b
+                         """
               
             }
         }
@@ -36,7 +36,7 @@ pipeline {
         stage("Quality Gate") {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar_qube_server'
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar_secert'
                 }
             }
         }

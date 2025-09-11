@@ -1,4 +1,5 @@
 FROM node:16.17.0-alpine as builder
+LABEL name="harshith" version="1.0.0"
 WORKDIR /app
 COPY ./package.json .
 COPY ./yarn.lock .
@@ -12,6 +13,6 @@ RUN yarn build
 FROM nginx:stable-alpine
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
-COPY --from=builder /app/dist .
+COPY --from=builder --chown=nginx:nginx /app/dist .
 EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
