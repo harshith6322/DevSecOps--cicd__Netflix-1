@@ -1,7 +1,9 @@
 pipeline {
-    agent {
-        label "slave-1"
-    }
+    // agent {
+    //     label "slave-1"
+    // }
+
+    agent "any"
 
     tools {
         jdk 'jdk_tool'
@@ -14,11 +16,27 @@ pipeline {
     }
 
     stages {
-        stage("Code") {
+        stage("Code checkout") {
             steps {
                 git branch: 'main', url: 'https://github.com/harshith6322/DevSecOps-ci-cd-Netflix.git'
             }
         }
+
+
+        stage("Install Dependencies") {
+            steps {
+                sh "yarn install"
+            }
+        }
+
+
+        stage("Testing"){
+           steps{
+              sh "yarn test || true"
+
+           }
+        }
+        
 
         stage("SonarQube Analysis") {
             steps {
@@ -28,40 +46,39 @@ pipeline {
                        -Dsonar.projectKey=netflix_code \
                        -Dsonar.sources=src \
                        -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/.git/**,**/coverage/**,**/*.min.js \
-                       -Dsonar.host.url=http://54.204.255.166:9000 \
-                       -Dsonar.login=sqp_d1cf341d438b4e4dbf70f0a6547cf9258eedea6b
+                       -Dsonar.host.url=http://44.202.0.234:9000 \
+                       -Dsonar.login=sqp_c94fb616771faf5703fdd50841291998608a92c9
                     """
               
             }
         }
 
-        // stage("Quality Gate") {
-        //     steps {
-        //         script {
-                    
-        //             waitForQualityGate abortPipeline: false, credentialsId: 'sonar_secert'
-        //         }
-        //     }
-        // }
 
-        stage("Install Dependencies") {
+        stage("Quality Gate") {
             steps {
-                sh "npm install"
+                script {
+                    
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar_secert'
+                }
             }
         }
 
-         stage('OWASP FS SCAN') {
+       
+        stage('OWASP FS SCAN') {
             steps {
                 dependencyCheck additionalArguments: '--scan ./src --disableYarnAudit --disableNodeAudit --exclude **/node_modules/** --exclude **/dist/** --exclude **/build/** --exclude **/.git/**', odcInstallation: 'dp_tool'
 
             }
         }
 
+
         stage('TRIVY FS SCAN') {
             steps {
                 sh "trivy fs . > trivyfs.txt"
             }
         }
+
+
         stage("Docker Build & Push"){
             steps{
                 script{
@@ -72,6 +89,7 @@ pipeline {
                 }
             }
         }
+
 
         stage("TRIVY"){
             steps{
