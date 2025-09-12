@@ -94,7 +94,7 @@ pipeline {
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'docker_token'){   
-                       sh "docker build --build-arg TMDB_V3_API_KEY=34b7fa0e189425be905b6072d83b9604 -t netflix_repo:${build_ide} ."
+                       sh "docker build --build-arg TMDB_V3_API_KEY=34b7fa0e189425be905b6072d83b9604 -t harshithreddy6322/netflix_repo:${build_ide} ."
                        sh "docker push harshithreddy6322/netflix_repo:${build_ide}"
                     }
                 }
