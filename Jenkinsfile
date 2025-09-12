@@ -33,6 +33,7 @@ pipeline {
 
         stage("Install Dependencies") {
             steps {
+                sh "rm -rf node_modules yarn.lock"
                 sh "yarn install --frozen-lockfile"
             }
         }
