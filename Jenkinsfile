@@ -15,7 +15,15 @@ pipeline {
         build_ide = "$BUILD_ID"
     }
 
+    
+
     stages {
+
+        stage("Clear ws"){
+            steps{
+                cleanWs()
+            }
+        }
         stage("Code checkout") {
             steps {
                 git branch: 'main', url: 'https://github.com/harshith6322/DevSecOps-ci-cd-Netflix.git'
