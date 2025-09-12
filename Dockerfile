@@ -3,7 +3,8 @@ LABEL name="harshith" version="1.0.0"
 WORKDIR /app
 COPY ./package.json .
 COPY ./yarn.lock .
-RUN yarn install
+RUN yarn install && yarn add -D @types/react@18 @types/react-dom@18 && yarn add @mui/material @emotion/react @emotion/styled
+RUN yarn add react-slick slick-carousel && yarn add -D @types/react-slick
 COPY . .
 ARG TMDB_V3_API_KEY
 ENV VITE_APP_TMDB_V3_API_KEY=${TMDB_V3_API_KEY}
