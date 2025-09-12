@@ -112,7 +112,7 @@ pipeline {
 
         stage("TRIVY"){
             steps{
-                sh "trivy image harshithreddy6322/netflix:${build_ide} > trivyimage.txt" 
+                sh "trivy image harshithreddy6322/netflix_repo:${build_ide} > trivyimage.txt" 
             }
         }
     }
