@@ -92,6 +92,14 @@ pipeline {
             }
         }
 
+        stage("Docker pull"){
+            steps{
+
+                sh "docker pull harshithreddy6322/netflix_repo:${build_ide}"
+            }
+
+        }
+
 
         stage("TRIVY"){
             steps{
