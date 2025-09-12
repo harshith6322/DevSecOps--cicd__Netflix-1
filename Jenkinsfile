@@ -40,7 +40,7 @@ pipeline {
 
         stage("SonarQube Analysis") {
             steps {
-               
+               withSonarQubeEnv("'MySonarQubeServer'") {
                    sh """
                       ${SCANNER_HOME}/bin/sonar-scanner \
                        -Dsonar.projectKey=netflix_code \
@@ -48,8 +48,7 @@ pipeline {
                        -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/.git/**,**/coverage/**,**/*.min.js \
                        -Dsonar.host.url=http://44.202.0.234:9000 \
                        -Dsonar.login=sqp_c94fb616771faf5703fdd50841291998608a92c9
-                    """
-              
+                    """            
             }
         }
 
