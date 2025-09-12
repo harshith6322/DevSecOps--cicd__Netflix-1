@@ -56,7 +56,7 @@ pipeline {
                        -Dsonar.sources=src \
                        -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/.git/**,**/coverage/**,**/*.min.js \
                        -Dsonar.host.url=http://44.202.0.234:9000 \
-                       -Dsonar.login=sqp_c94fb616771faf5703fdd50841291998608a92c9
+                       -Dsonar.login=sqp_bc2150e3ddccbd11f9f261404f8907f8ddd67813
                     """  
                }          
             }
