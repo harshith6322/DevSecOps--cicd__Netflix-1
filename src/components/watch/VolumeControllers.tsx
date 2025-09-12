@@ -1,7 +1,8 @@
 import { Stack } from "@mui/material";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
-import { SliderUnstyledOwnProps } from "@mui/base/SliderUnstyled";
+import { SliderProps } from "@mui/base/Slider";
+type SliderUnstyledOwnProps = SliderProps;
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import PlayerControlButton from "./PlayerControlButton";
