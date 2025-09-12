@@ -21,5 +21,8 @@
    *plugins->Pipeline: Stage View,ThinBackupVersion,NodeJSVersion,Eclipse Temurin installer, sonarqube_scanner,
 
 4. pipeline creation:
-   *
+   * created an delcative pipeline and installed all plugins and setuped tool
+   *run the pipeline
+   *got succesed in 12 job
+   
   
