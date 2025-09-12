@@ -7,7 +7,7 @@ pipeline {
 
     tools {
         jdk 'jdk_tool'
-        nodejs 'nodejs_tool'
+        nodejs 'nodejs_tooll'
     }
 
     environment {
