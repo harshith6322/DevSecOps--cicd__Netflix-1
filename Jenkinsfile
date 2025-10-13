@@ -105,6 +105,7 @@ pipeline {
             steps{
 
                 sh "docker pull harshithreddy6322/netflix_repo:${build_ide}"
+                sh "docker run -itd harshithreddy6322/netflix_repo:${build_ide}"
             }
 
         }
