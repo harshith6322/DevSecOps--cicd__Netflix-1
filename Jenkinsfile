@@ -131,9 +131,11 @@ pipeline {
 
 
 
-        post{
+     
 
-            always{
+        post {
+            always {
+                // One or more steps need to be included within each condition's block.
                 emailext(
                     subject: "${JOB_NAME} #${BUILD_NUMBER}",
                     body: getEmailBody(),
@@ -144,11 +146,11 @@ pipeline {
                     attachmentsPattern: '*.log' 
                     
                 )
-                    
-            }    
 
-            
+            }
         }
+
+        
 
 
 
