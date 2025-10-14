@@ -74,7 +74,7 @@ pipeline {
         stage("OWASP"){
             steps{
                 dependencyCheck additionalArguments: '''--project Netflix --scan ./src --format XML --disableYarnAudit --disableNodeAudit --exclude **/node_modules/** --exclude **/dist/** --exclude **/build/** --exclude **/.git/** ''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'
-               dependencyCheckPublisher pattern: '**/dependency-check-report.xml'         
+               dependencyCheckPublisher pattern: 'dependency-check-report.xml'         
             }
         }
 
@@ -144,7 +144,7 @@ pipeline {
                     to: "${RECIPIENTS}",
                     attachLog: true,
                     compressLog: true,
-                    attachmentsPattern: '*.log' 
+                    attachmentsPattern: 'trivyimage_logs.log,dependency-check-report.xml,trivy-fs-report.log' 
                     
                 )
 
@@ -181,7 +181,7 @@ def getEmailBody() {
         <p><strong>Project:</strong> ${env.JOB_NAME}</p>
         <p><strong>Branch:</strong> ${env.BRANCH_NAME ?: 'N/A'}</p>
         <p><strong>Build Number:</strong> #${env.BUILD_NUMBER}</p>
-        <p><strong>Status:</strong>${currentBuild.result}</p>
+        <p><strong>Status:</strong> <span class="${currentBuild.result== 'SUCCESS' ? 'status-success' : 'status-failed'}">${currentBuild.result}</span></p>
         <a class="button ${currentBuild.result == 'SUCCESS' ? 'btn-success' : 'btn-failed'}" href="${env.BUILD_URL}">View Build Logs</a>
         <div class="footer">
           <p>This is an automated message from Jenkins CI/CD</p>
