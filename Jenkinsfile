@@ -132,16 +132,18 @@ pipeline {
 
 
         post{
+
             always{
-                    emailext(
-                        subject: "${JOB_NAME} #${BUILD_NUMBER}",
-                        body: getEmailBody(),
-                        mimeType: 'text/html',
-                        to: "${RECIPIENTS}",
-                        attachLog: true,
-                        compressLog: true,
-                        attachmentsPattern: '*.log' 
-                    )
+                emailext(
+                    subject: "${JOB_NAME} #${BUILD_NUMBER}",
+                    body: getEmailBody(),
+                    mimeType: 'text/html',
+                    to: "${RECIPIENTS}",
+                    attachLog: true,
+                    compressLog: true,
+                    attachmentsPattern: '*.log' 
+                    
+                )
                     
             }    
 
