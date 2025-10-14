@@ -56,7 +56,7 @@ pipeline {
 
         stage("QULITY-GATE"){
             steps{
-                waitForQualityGate abortPipeline: false, credentialsId: 'sonar-secret'
+                waitForQualityGate abortPipeline: false, credentialsId: 'sonar-server-cred'
             }
         }
 
@@ -67,25 +67,13 @@ pipeline {
             }
         }
 
-        // stage("OWASP"){
-        //     steps{
-        //         dependencyCheck additionalArguments: '''
-        //         --project netflix \
-        //         --scan ./ \
-        //         --format "XML,HTML" \
-        //         --out dependency-check-report \
-        //         --disableYarnAudit \
-        //         --disableNodeAudit \
-        //         --exclude **/node_modules/** \
-        //         --exclude **/dist/** \
-        //         --exclude **/build/** \
-        //         --exclude **/.git/**
-        //         ''',
-        //         odcInstallation: 'dp_tool'
-        //         dependencyCheckPublisher pattern: 'dependency-check-report/dependency-check-report.xml'
-               
-        //     }
-        // }
+        stage("OWASP"){
+            steps{
+               script{
+                dependencyCheck additionalArguments: '''--project Netflix --scan ./ --format XML''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'
+               }
+            }
+        }
 
 
         stage("FS AND TEST"){
