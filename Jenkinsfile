@@ -23,6 +23,8 @@ pipeline {
 
     environment{
         scannerHome = tool("sonarqube-tool")
+
+        build_id = env.BUILD_ID
     }
 
 
@@ -70,7 +72,8 @@ pipeline {
         stage("OWASP"){
             steps{
                script{
-                dependencyCheck additionalArguments: '''--project Netflix --scan ./ --format XML''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'
+                dependencyCheck additionalArguments: '''--project Netflix --scan ./src --format XML''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'
+                dependencyCheckPublisher pattern: 'dependencyCheckPublisher_report.xml'
                }
             }
         }
@@ -102,8 +105,8 @@ pipeline {
                script{
                  withDockerRegistry(credentialsId: 'docker-cred') {
                  // some block
-                 sh "docker build -t harshithreddy6322/netflix_repo:${BUILD_ID} --build-arg TMDB_V3_API_KEY=34b7fa0e189425be905b6072d83b9604 ."
-                 sh "docker push harshithreddy6322/netflix_repo:${BUILD_ID}"
+                 sh "docker build -t harshithreddy6322/netflix_repo:${build_id} --build-arg TMDB_V3_API_KEY=34b7fa0e189425be905b6072d83b9604 ."
+                 sh "docker push harshithreddy6322/netflix_repo:${build_id}"
 
                 }
                }
@@ -114,15 +117,15 @@ pipeline {
 
         stage("CHECKIG DOCKER"){
             steps{
-                sh "docker pull harshithreddy6322/netflix_repo:${BUILD_ID}"
-                sh "docker run -itd harshithreddy6322/netflix_repo:${BUILD_ID}"
+                sh "docker pull harshithreddy6322/netflix_repo:${build_id}"
+                sh "docker run -itd harshithreddy6322/netflix_repo:${build_id}"
             }
         }
 
 
         stage("TRIVY IMAGE SCAN"){
             steps{
-                sh "trivy image harshithreddy6322/netflix_repo:${BUILD_ID} > trivyimage.txt" 
+                sh "trivy image harshithreddy6322/netflix_repo:${build_id} > trivyimage.txt" 
             }
         }
 
