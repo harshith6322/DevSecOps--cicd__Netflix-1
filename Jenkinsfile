@@ -25,6 +25,8 @@ pipeline {
         scannerHome = tool("sonarqube-tool")
 
         build_id = "$BUILD_ID"
+
+        RECIPIENTS = "noreply.jenkins2025@gmail.com rrchennareddy1971@gmail.com"
     }
 
 
@@ -72,7 +74,7 @@ pipeline {
         stage("OWASP"){
             steps{
                 dependencyCheck additionalArguments: '''--project Netflix --scan ./src --format XML --disableYarnAudit --disableNodeAudit --exclude **/node_modules/** --exclude **/dist/** --exclude **/build/** --exclude **/.git/** ''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'
-                dependencyCheckPublisher pattern: 'dependencyCheckPublisher_report.xml'           
+               dependencyCheckPublisher pattern: '**/dependency-check-report.xml'         
             }
         }
 
@@ -82,7 +84,7 @@ pipeline {
 
               stage("TRIVY FS"){
                 steps{
-                    sh "trivy fs . >> trivy-fs-report.txt"
+                    sh "trivy fs . > trivy-fs-report.log"
                 }
               }
 
@@ -112,20 +114,40 @@ pipeline {
             }
         }
 
-
-        stage("CHECKIG DOCKER"){
-            steps{
-                sh "docker pull harshithreddy6322/netflix_repo:${build_id}"
-                sh "docker run -itd harshithreddy6322/netflix_repo:${build_id}"
-            }
-        }
-
-
         stage("TRIVY IMAGE SCAN"){
             steps{
                 sh "trivy image harshithreddy6322/netflix_repo:${build_id} > trivyimage_logs.log" 
             }
         }
+
+        stage("CHECKIG DOCKER"){
+            steps{
+                sh "docker pull harshithreddy6322/netflix_repo:${build_id}"
+                sh "docker run -itd harshithreddy6322/netflix_repo:${build_id}"
+                sh "sleep 2m"
+                sh "docker rm -f harshithreddy6322/netflix_repo:${build_id}"
+            }
+        }
+
+
+
+        post{
+            always{
+                emailext(
+                subject: " ${JOB_NAME} #${BUILD_NUMBER}",
+                body: getEmailBody("SUCCESS"),
+                mimeType: 'text/html',
+                to: "${RECIPIENTS}",
+                attachLog: true,
+                compressLog: true,
+                attachmentsPattern: 'npm-audit-report.json,trivy_scan_ouput.txt' 
+               
+            )
+
+            }
+        }
+
+
 
 
 
