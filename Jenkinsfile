@@ -24,7 +24,7 @@ pipeline {
     environment{
         scannerHome = tool("sonarqube-tool")
 
-        build_id = $BUILD_ID
+        build_id = "$BUILD_ID"
     }
 
 
