@@ -1,0 +1,11 @@
+full-project-setup
+1.
+created using bash script jenkins master pre install with docker 
+created sonar qube via docker 
+  - docker run -itd -rm --name sonarqube -p 9000:9000 sonarqube:lts-community
+installed trivy manualy
+creating dynamic slave using ec2-plugin 
+testing netflix app by creating  docker build and run  localy  first 
+
+2.installing plugins
+nodejs sonar qualit gate elcips-java email
