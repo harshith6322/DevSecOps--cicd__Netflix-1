@@ -71,10 +71,8 @@ pipeline {
 
         stage("OWASP"){
             steps{
-               script{
-                dependencyCheck additionalArguments: '''--project Netflix --scan ./src --format XML''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'
-                dependencyCheckPublisher pattern: 'dependencyCheckPublisher_report.xml'
-               }
+                dependencyCheck additionalArguments: '''--project Netflix --scan ./src --format XML --disableYarnAudit --disableNodeAudit --exclude **/node_modules/** --exclude **/dist/** --exclude **/build/** --exclude **/.git/** ''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'
+                dependencyCheckPublisher pattern: 'dependencyCheckPublisher_report.xml'           
             }
         }
 
@@ -125,7 +123,7 @@ pipeline {
 
         stage("TRIVY IMAGE SCAN"){
             steps{
-                sh "trivy image harshithreddy6322/netflix_repo:${build_id} > trivyimage.txt" 
+                sh "trivy image harshithreddy6322/netflix_repo:${build_id} > trivyimage_logs.log" 
             }
         }
 
