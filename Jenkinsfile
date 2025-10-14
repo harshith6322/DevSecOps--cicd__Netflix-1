@@ -114,11 +114,13 @@ pipeline {
             }
         }
 
+
         stage("TRIVY IMAGE SCAN"){
             steps{
                 sh "trivy image harshithreddy6322/netflix_repo:${build_id} > trivyimage_logs.log" 
             }
         }
+
 
         stage("CHECKIG DOCKER"){
             steps{
@@ -129,11 +131,10 @@ pipeline {
             }
         }
 
+        
+    }
 
-
-     
-
-        post {
+    post {
             always {
                 // One or more steps need to be included within each condition's block.
                 emailext(
@@ -149,16 +150,6 @@ pipeline {
 
             }
         }
-
-        
-
-
-
-
-
-
-        
-    }
 }
 
 
