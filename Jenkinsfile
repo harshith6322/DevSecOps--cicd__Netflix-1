@@ -40,7 +40,7 @@ pipeline {
 
         stage("CODE"){
             steps{
-                git branch: 'main', url: 'https://github.com/harshith6322/DevSecOps--cicd__Netflix-1.git'
+                git branch: 'main', url: 'https://github.com/harshith6322/DevSecOps--cicd__Netflix-1.git'                
             }
         }
 
