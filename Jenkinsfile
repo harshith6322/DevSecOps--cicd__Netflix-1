@@ -73,8 +73,7 @@ pipeline {
 
         stage("OWASP"){
             steps{
-                dependencyCheck additionalArguments: '''--project Netflix --scan ./src --format XML --disableYarnAudit --disableNodeAudit --exclude **/node_modules/** --exclude **/dist/** --exclude **/build/** --exclude **/.git/** ''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'
-               dependencyCheckPublisher pattern: 'dependency-check-report.xml'         
+                dependencyCheck additionalArguments: '''--project Netflix --scan ./src --format XML --disableYarnAudit --disableNodeAudit''', debug: true, nvdCredentialsId: 'owasp-cred', odcInstallation: 'dpc-tool'      
             }
         }
 
@@ -135,21 +134,38 @@ pipeline {
     }
 
     post {
-            always {
-                // One or more steps need to be included within each condition's block.
-                emailext(
-                    subject: "${JOB_NAME} #${BUILD_NUMBER}",
-                    body: getEmailBody(),
-                    mimeType: 'text/html',
-                    to: "${RECIPIENTS}",
-                    attachLog: true,
-                    compressLog: true,
-                    attachmentsPattern: 'trivyimage_logs.log,dependency-check-report.xml,trivy-fs-report.log' 
-                    
-                )
-
+    always {
+        script {
+            def emoji = ''
+            switch (currentBuild.result) {
+                case 'SUCCESS':
+                    emoji = '✔️'
+                    break
+                case 'FAILURE':
+                    emoji = '❌'
+                    break
+                case 'UNSTABLE':
+                    emoji = '⚠️'
+                    break
+                default:
+                    emoji = '❔'
             }
+
+            emailext(
+                subject: "${emoji} ${JOB_NAME} #${BUILD_NUMBER} - ${currentBuild.result}",
+                body: getEmailBody(),
+                mimeType: 'text/html',
+                to: "${RECIPIENTS}",
+                attachLog: true,
+                compressLog: true,
+                attachmentsPattern: 'trivyimage_logs.log,dependency-check-report.xml,trivy-fs-report.log'
+            )
         }
+    }
+}
+
+
+ 
 }
 
 

@@ -8,4 +8,4 @@ creating dynamic slave using ec2-plugin
 testing netflix app by creating  docker build and run  localy  first 
 
 2.installing plugins
-nodejs sonar qualit gate elcips-java email owasp -52138b15-ccc8-4075-afba-91726c1ac57a
+nodejs sonar qualit gate elcips-java email owasp -  api - 52138b15-ccc8-4075-afba-91726c1ac57a
