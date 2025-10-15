@@ -1,5 +1,11 @@
 <div align="center">
   <img src="./public/assets/DevSecOps.png" alt="Logo" width="100%" height="100%">
+  <img width="1916" height="953" alt="Screenshot 2025-10-15 165713" src="https://github.com/user-attachments/assets/e883ad13-f56b-4006-8e11-ae276dcdb7b7" />
+  <img width="1630" height="213" alt="Screenshot 2025-10-15 182115" src="https://github.com/user-attachments/assets/c88e55a1-726a-421f-b2a6-579e2fe34982" />
+<img width="1916" height="830" alt="Screenshot 2025-10-15 165827" src="https://github.com/user-attachments/assets/5c248b81-abfd-4bf9-b8ed-8018b0eb943a" />
+<img width="1919" height="884" alt="Screenshot 2025-10-15 165800" src="https://github.com/user-attachments/assets/a1145fa0-6d32-40b1-8fa5-b0306d5bb7ee" />
+<img width="1076" height="767" alt="Screenshot 2025-10-15 170012" src="https://github.com/user-attachments/assets/29620174-7f65-4f3d-b7ce-431869e6d302" />
+<img width="1919" height="947" alt="Screenshot 2025-10-15 181920" src="https://github.com/user-attachments/assets/9b34a3bd-b580-471a-9663-86f81a026645" />
 
   <br>
   <a href="http://netflix-clone-with-tmdb-using-react-mui.vercel.app/">
