@@ -139,7 +139,7 @@ pipeline {
             def emoji = ''
             switch (currentBuild.result) {
                 case 'SUCCESS':
-                    emoji = '✔️'
+                    emoji = '✅'
                     break
                 case 'FAILURE':
                     emoji = '❌'
@@ -148,7 +148,7 @@ pipeline {
                     emoji = '⚠️'
                     break
                 default:
-                    emoji = '❔'
+                    emoji = '😶‍🌫️'
             }
 
             emailext(
